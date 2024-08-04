@@ -46,5 +46,4 @@
 - 🌱 I’m currently learning Rust and Go
 - 💬 Ask me about anything tech related, I am happy to help!
 - 📫 How to reach me: jiemucn@foxmail.com
-- 😄 Pronouns: he/him
 - ⚡ Fun fact: I wanna be a game developer
