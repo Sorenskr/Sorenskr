@@ -33,7 +33,6 @@
 <p align="center">
   <img src="https://github-readme-stats.vercel.app/api?username=Sorenskr&show_icons=true&theme=radical" alt="Sorenskr's GitHub stats" />
   <img src="https://github-readme-streak-stats.herokuapp.com/?user=Sorenskr&theme=radical" alt="Sorenskr's GitHub Streak" />
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Sorenskr&layout=compact&theme=radical" alt="Top Langs" />
 </p>
 
 <!-- GitHub 奖杯 -->
