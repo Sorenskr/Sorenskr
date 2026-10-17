@@ -384,7 +384,7 @@ $ ./contact --send "一起做点东西吧"
 
 <div align="center">
 
-<img src="https://komarev.com/ghpvc/?username=Sorenskr&style=flat-square&label=Profile%20views&color=2D82B9" alt="Profile view counter">
+<img src="https://count.getloli.com/get/@Sorenskr?theme=asoul" alt="Adventurers visited / 探索者来访次数">
 
 </div>
 
