@@ -1,0 +1,68 @@
+name: Generate Snake Animation
+
+# 每 12 小时重画一次“贪吃蛇”贡献图，并把结果推到 output 分支
+# 触发时机：定时任务 / 手动运行 / 主分支有提交
+on:
+  schedule:
+    - cron: "0 */12 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: write
+
+    steps:
+      # 1) 生成 SVG。svg-only 比完整版快很多（不需要渲染 GIF）
+      - name: Generate contribution snake
+        uses: Platane/snk/svg-only@v3
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            dist/github-contribution-grid-snake.svg?palette=github-light
+            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+
+      # 2) 推到 output 分支。
+      #    这里刻意不依赖任何第三方 push action，纯 git 命令，避免供应链风险。
+      #    分支不存在时会创建成孤立分支（orphan），保证首次运行也能成功。
+      - name: Publish to output branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}"
+
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git clone --depth 1 --branch output "$REPO_URL" out; then
+            echo "output branch already exists"
+          else
+            echo "creating orphan output branch"
+            git clone --depth 1 "$REPO_URL" out
+            cd out
+            git checkout --orphan output
+            git rm -rf . || true
+            cd -
+          fi
+
+          cd out
+          cp -f ../dist/github-contribution-grid-snake.svg .
+          cp -f ../dist/github-contribution-grid-snake-dark.svg .
+          git add github-contribution-grid-snake.svg github-contribution-grid-snake-dark.svg
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit, skipping push."
+            exit 0
+          fi
+
+          git commit -m "chore: update contribution snake animation"
+          git push origin output
